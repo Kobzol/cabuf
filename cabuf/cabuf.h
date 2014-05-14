@@ -11,7 +11,7 @@ protected:
 	char *input_buf;
 	char *output_buf;
 
-	const size_t size = 20;
+	const size_t buffer_size = 20;
 
 	std::vector<char> packer;
 

@@ -2,14 +2,16 @@
 
 cabuf::cabuf()
 {
-	this->input_buf = new char[this->size];
-	this->output_buf = new char[this->size];
+	this->input_buf = new char[this->buffer_size];
+	this->output_buf = new char[this->buffer_size];
 
 	this->reset_output();
 }
 
 cabuf::~cabuf()
 {
+	this->sync();
+
 	delete[] this->input_buf;
 	delete[] this->output_buf;
 }
@@ -22,7 +24,6 @@ cabuf::int_type cabuf::overflow(int input)
 		this->pbump(1);
 
 		this->sync();
-		this->reset_output();
 	}
 	else return traits_type::eof();
 }
@@ -38,12 +39,14 @@ int cabuf::sync()
 		start++;
 	}
 
+	this->reset_output();
+
 	return 0;
 }
 
 void cabuf::reset_output()
 {
-	this->setp(this->output_buf, this->output_buf, this->output_buf + this->size - 1);	// -1 to keep space for overflow char
+	this->setp(this->output_buf, this->output_buf, this->output_buf + this->buffer_size - 1);	// -1 to keep space for overflow char
 }
 
 int cabuf::underflow()
